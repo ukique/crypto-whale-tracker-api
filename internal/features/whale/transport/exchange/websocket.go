@@ -9,7 +9,7 @@ import (
 
 	"github.com/gorilla/websocket"
 
-	pb "github.com/ukique/crypto-whale-tracker-api/internal/pb"
+	"github.com/ukique/crypto-whale-tracker-api/internal/pb"
 	"google.golang.org/protobuf/proto"
 )
 
