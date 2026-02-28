@@ -1,0 +1,6 @@
+github.com/gorilla/websocket v1.5.3 h1:saDtZ6Pbx/0u+bgYQ3q96pZgCzfhKXGPqt7kZ72aNNg=
+github.com/gorilla/websocket v1.5.3/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE=
+github.com/mexcdevelop/websocket-proto v0.0.0-20250225014621-4285a07f9d51 h1:CqMh+bQF/AfjxqwcSTwWBvA2CZHYuGstp/Yx0otHiG4=
+github.com/mexcdevelop/websocket-proto v0.0.0-20250225014621-4285a07f9d51/go.mod h1:Iy7E8Qo9mT88rG0w2Nf8FNk9UhoWU5tMHJ5GoFkq72I=
+google.golang.org/protobuf v1.36.11 h1:fV6ZwhNocDyBLK0dj+fg8ektcVegBBuEolpbTQyBNVE=
+google.golang.org/protobuf v1.36.11/go.mod h1:HTf+CrKn2C3g5S8VImy6tdcUvCska2kB7j23XfzDpco=
