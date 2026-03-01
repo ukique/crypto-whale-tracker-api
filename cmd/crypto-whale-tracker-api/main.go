@@ -2,14 +2,21 @@ package main
 
 import (
 	"log"
-	"net/http"
 
+	"github.com/gin-gonic/gin"
+	"github.com/ukique/crypto-whale-tracker-api/internal/features/whale/models"
 	"github.com/ukique/crypto-whale-tracker-api/internal/features/whale/transport/exchange"
+	"github.com/ukique/crypto-whale-tracker-api/internal/features/whale/transport/handlers"
 )
 
 func main() {
-	exchange.ConnectWebSocket()
-	if err := http.ListenAndServe(":8081", nil); err != nil {
+	r := gin.Default()
+
+	whaleChan := make(chan models.Whale)
+	go exchange.ConnectWebSocket(whaleChan)
+
+	r.GET("/whale", handlers.WhaleHandler(whaleChan))
+	if err := r.Run(":8081"); err != nil {
 		log.Fatal("Fail to start on port 8081:", err)
 	}
 }
