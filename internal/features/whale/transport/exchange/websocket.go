@@ -8,7 +8,8 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
-
+	"github.com/ukique/crypto-whale-tracker-api/internal/features/whale/models"
+	"github.com/ukique/crypto-whale-tracker-api/internal/features/whale/service"
 	"github.com/ukique/crypto-whale-tracker-api/internal/pb"
 	"google.golang.org/protobuf/proto"
 )
@@ -17,7 +18,7 @@ const (
 	WebsocketURL = "wss://wbs-api.mexc.com/ws"
 )
 
-func ConnectWebSocket() {
+func ConnectWebSocket(whaleChan chan models.Whale) {
 	//graceful shutdown when we use Ctrl + C
 	interrupt := make(chan os.Signal, 1)
 	signal.Notify(interrupt, os.Interrupt)
@@ -86,17 +87,26 @@ func ConnectWebSocket() {
 			log.Println("fail to read message:", err)
 			return
 		}
+
+		// Skip system MEXC notifications (subscription confirmations, PONG)
 		if len(message) > 0 && message[0] == '{' {
-			log.Printf("JSON message (skipping): %s", message)
 			continue
 		}
-
 		decodedMessage := &pb.PushDataV3ApiWrapper{}
 		if err := proto.Unmarshal(message, decodedMessage); err != nil {
 			log.Println("protobuf unmarshal error:", err)
 			continue
 		}
-		log.Println("message:", decodedMessage)
-		//	than here will be check whale func
+
+		for _, deal := range decodedMessage.GetPublicAggreDeals().Deals {
+			if service.IsWhale(deal.Price, deal.Quantity) {
+				whaleChan <- models.Whale{
+					Price:    deal.Price,
+					Quantity: deal.Quantity,
+					Symbol:   decodedMessage.GetSymbol(),
+					Time:     deal.Time,
+				}
+			}
+		}
 	}
 }
