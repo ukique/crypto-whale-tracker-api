@@ -1,12 +1,15 @@
-package gin
+package handlers
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+	"github.com/ukique/crypto-whale-tracker-api/internal/features/whale/models"
 )
 
-func WhaleHandler(w http.ResponseWriter, r *http.Request) {
-	r := gin.Default()
-	r.Run(":8081")
+func WhaleHandler(whaleChan <-chan models.Whale) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		whale := <-whaleChan
+		c.JSON(200, gin.H{
+			"whale": whale,
+		})
+	}
 }
